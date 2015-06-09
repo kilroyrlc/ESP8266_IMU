@@ -37,7 +37,7 @@ Adafruit_IO_Client aio = Adafruit_IO_Client(client, AIO_KEY);
 Adafruit_IO_Feed testFeed = aio.getFeed("esptestfeed");
 
 // Alternatively to access a feed with a specific key:
-//Adafruit_IO_Feed testFeed = aio.getFeed("fonatestfeed", "...fonatestfeed key...");
+//Adafruit_IO_Feed testFeed = aio.getFeed("esptestfeed", "...esptestfeed key...");
 
 // Global state to increment a number and send it to the feed.
 unsigned int count = 0;
