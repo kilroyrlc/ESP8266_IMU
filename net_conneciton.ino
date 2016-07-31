@@ -4,9 +4,14 @@
 #include <Adafruit_LSM303_U.h>
 #include <Adafruit_L3GD20_U.h>
 #include <Adafruit_9DOF.h>
+
+#include <Adafruit_INA219.h>
+
 #include <ESP8266WiFi.h>
 
 #include <credentials.h>
+
+Adafruit_INA219 ina219;
 
 const char* ssid     = credentials::ssid;
 const char* password = credentials:password;
@@ -42,10 +47,16 @@ void initSensors()
 void setup() {
   Serial.begin(115200);
   delay(100);
-
+  
+  uint32_t currentFrequency;
+    
+  Serial.begin(115200);
+  Serial.println("Hello!");
+  
+  ina219.begin();
+  Serial.println("Measuring voltage and current with INA219 ..."); 
 
   // We start by connecting to a WiFi network
-
   Serial.println();
   Serial.println();
   Serial.print("Connecting to ");
@@ -69,7 +80,23 @@ void setup() {
 
 
 void loop() {
-  delay(5000);
+  //delay(5000);
+
+  float shuntvoltage = 0;
+  float busvoltage = 0;
+  float current_mA = 0;
+  float loadvoltage = 0;
+
+  shuntvoltage = ina219.getShuntVoltage_mV();
+  busvoltage = ina219.getBusVoltage_V();
+  current_mA = ina219.getCurrent_mA();
+  loadvoltage = busvoltage + (shuntvoltage / 1000);
+
+  Serial.print("Bus Voltage:   "); Serial.print(busvoltage); Serial.println(" V");
+  Serial.print("Shunt Voltage: "); Serial.print(shuntvoltage); Serial.println(" mV");
+  Serial.print("Load Voltage:  "); Serial.print(loadvoltage); Serial.println(" V");
+  Serial.print("Current:       "); Serial.print(current_mA); Serial.println(" mA");
+  Serial.println("");
 
   Serial.print("connecting to ");
   Serial.println(host);
@@ -102,6 +129,7 @@ void loop() {
   Serial.println();
   Serial.println("closing connection");
 
+  //delay(2000);
 
   // START IMU LOOP
   sensors_event_t accel_event;
