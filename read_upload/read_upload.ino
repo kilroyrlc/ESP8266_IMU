@@ -9,6 +9,7 @@
 #include <Adafruit_INA219.h>
 
 #include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
 
 #include "config.h"
 
@@ -119,8 +120,8 @@ void setup() {
 const int httpPort = 80;
 String barf = "some reading";
 
-
-void loop() {
+/*
+void loop1() {
 
   readINA219();
 
@@ -137,7 +138,6 @@ void loop() {
     return;
   }
 
- 
   url += "?data=" + barf;
   // request
   client.print(String("GET ") + url + " HTTP/1.1\r\n" +
@@ -153,4 +153,21 @@ void loop() {
     Serial.print(line);
   }
   */
+}
+*/
+
+void loop() {
+  //readINA219();
+  //readIMU();
+
+  HTTPClient http;
+  http.begin("http://www.blametommy.com/barf_api/");
+  http.addHeader("Content-Type", "text/plain");
+  auto httpCode = http.POST("barf");
+  Serial.print("HTTP CODE: ");
+  Serial.println(httpCode);
+  REQUIRE(httpCode == HTTP_CODE_OK);
+  http.end();
+
+  delay(100);
 }
