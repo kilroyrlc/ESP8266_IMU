@@ -38,6 +38,7 @@ void initIMU()
   }
 }
 
+
 void readINA219() {
   float shuntvoltage = 0;
   float busvoltage = 0;
@@ -55,6 +56,7 @@ void readINA219() {
   Serial.print("Current:       "); Serial.print(current_mA); Serial.println(" mA");
   Serial.println("");
 }
+
 
 void readIMU() {
 
@@ -113,32 +115,41 @@ void setup() {
 }
 
 
+const int httpPort = 80;
+char* barf = "some reading";
+
+
 void loop() {
 
   readINA219();
 
   readIMU();
 
-  Serial.print("connecting to ");
-  Serial.println(host);
+  // Serial.print("connecting to ");
+  // Serial.println(host);
   
   // Use WiFiClient class to create TCP connections
   WiFiClient client;
-  const int httpPort = 80;
+  //const int httpPort = 80;
   if (!client.connect(host, httpPort)) {
     Serial.println("connection failed");
     return;
   }
- 
+
+  barf
+  url += "/" + barf;
   // request
   client.print(String("GET ") + url + " HTTP/1.1\r\n" +
                "Host: " + host + "\r\n" + 
                "Connection: close\r\n\r\n");
   // yield?
-  delay(500);
+  // delay(500);
+  yield();
   
+  /*
   while(client.available()){
     String line = client.readStringUntil('\r');
     Serial.print(line);
   }
+  */
 }
