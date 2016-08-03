@@ -1,3 +1,4 @@
+// v0.0.1
 #include <Wire.h>
 
 #include <Adafruit_Sensor.h>
@@ -116,7 +117,7 @@ void setup() {
 
 
 const int httpPort = 80;
-char* barf = "some reading";
+String barf = "some reading";
 
 
 void loop() {
@@ -136,7 +137,7 @@ void loop() {
     return;
   }
 
-  barf
+ 
   url += "?data=" + barf;
   // request
   client.print(String("GET ") + url + " HTTP/1.1\r\n" +
