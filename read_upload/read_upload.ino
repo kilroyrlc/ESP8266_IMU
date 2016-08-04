@@ -120,7 +120,7 @@ void setup() {
 const int httpPort = 80;
 String barf = "some reading";
 
-/*
+
 void loop1() {
 
   readINA219();
@@ -133,7 +133,7 @@ void loop1() {
   // Use WiFiClient class to create TCP connections
   WiFiClient client;
   //const int httpPort = 80;
-  if (!client.connect(host, httpPort)) {
+  if (!client.connect("host", httpPort)) {
     Serial.println("connection failed");
     return;
   }
@@ -154,20 +154,23 @@ void loop1() {
   }
   */
 }
-*/
+
 
 void loop() {
   //readINA219();
   //readIMU();
 
   HTTPClient http;
-  http.begin("http://www.blametommy.com/barf_api/");
+  
+  http.begin("http://138.68.20.196:9023/");
   http.addHeader("Content-Type", "text/plain");
-  auto httpCode = http.POST("barf");
+  auto httpCode = http.GET();
   Serial.print("HTTP CODE: ");
   Serial.println(httpCode);
-  REQUIRE(httpCode == HTTP_CODE_OK);
-  http.end();
+  String payload = http.getString();
+  Serial.println(payload);
+  //REQUIRE(httpCode == HTTP_CODE_OK);
+  //http.end();
 
   delay(100);
 }
