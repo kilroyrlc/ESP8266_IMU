@@ -21,11 +21,11 @@
 #include <Adafruit_INA219.h>
 
 // Configure WiFi access point details.
-#define WLAN_SSID  "Fog City Swagger"
-#define WLAN_PASS  "adaptevolvesucceed758"
+#define WLAN_SSID  "barf"
+#define WLAN_PASS  "barf"
 
 // Configure Adafruit IO access.
-#define AIO_KEY    "dc44e7f1875642528d3ca8e5d2f740c1"
+#define AIO_KEY    "barf"
 
 Adafruit_INA219 ina219;
 
