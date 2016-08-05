@@ -133,11 +133,6 @@ float readINA219(struct &sensorReadings) {
   sensorReadings.current_mA = ina219.getCurrent_mA();
   sensorReadings.loadvoltage = busvoltage + (shuntvoltage / 1000);
 
-  Serial.print("Bus Voltage:   "); Serial.print(busvoltage); Serial.println(" V");
-  Serial.print("Shunt Voltage: "); Serial.print(shuntvoltage); Serial.println(" mV");
-  Serial.print("Load Voltage:  "); Serial.print(loadvoltage); Serial.println(" V");
-  Serial.print("Current:       "); Serial.print(current_mA); Serial.println(" mA");
-  Serial.println("");
   
   // Turn off the system when this drops below threshold.
   return busvoltage;
@@ -186,6 +181,11 @@ void loop() {
   digitalWrite(12, LOW);
   float barfer = readINA219();
   readIMU();
+  Serial.print("Bus Voltage:   "); Serial.print(sensorReadings.busvoltage); Serial.println(" V");
+  Serial.print("Shunt Voltage: "); Serial.print(sensorReadings.shuntvoltage); Serial.println(" mV");
+  Serial.print("Load Voltage:  "); Serial.print(sensorReadings.loadvoltage); Serial.println(" V");
+  Serial.print("Current:       "); Serial.print(sensorReadings.current_mA); Serial.println(" mA");
+  Serial.println("");
   
   // To write a value just call the feed's send function and pass it the value.
   // Send will create the feed on Adafruit IO if it doesn't already exist and
