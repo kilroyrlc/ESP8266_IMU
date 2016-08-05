@@ -71,8 +71,6 @@ struct BarfDataType {
     float current_mA;
     float loadvoltage;
 };
-struct sensorReadings = BarfDataType;
-
 
 void initIMU() {
   if(!accel.begin())
@@ -122,21 +120,16 @@ void readIMU() {
 }
 
 
-float readINA219(struct &sensorReadings) {
-  sensorReadings.shuntvoltage = 0;
-  sensorReadings.busvoltage = 0;
-  sensorReadings.current_mA = 0;
-  sensorReadings.loadvoltage = 0;
-
+void readINA219(BarfDataType &sensorReadings) {
   sensorReadings.shuntvoltage = ina219.getShuntVoltage_mV();
   sensorReadings.busvoltage = ina219.getBusVoltage_V();
   sensorReadings.current_mA = ina219.getCurrent_mA();
   sensorReadings.loadvoltage = busvoltage + (shuntvoltage / 1000);
 
-  Serial.print("Bus Voltage:   "); Serial.print(busvoltage); Serial.println(" V");
-  Serial.print("Shunt Voltage: "); Serial.print(shuntvoltage); Serial.println(" mV");
-  Serial.print("Load Voltage:  "); Serial.print(loadvoltage); Serial.println(" V");
-  Serial.print("Current:       "); Serial.print(current_mA); Serial.println(" mA");
+  Serial.print("Bus Voltage:   "); Serial.print(sensorReadings.busvoltage); Serial.println(" V");
+  Serial.print("Shunt Voltage: "); Serial.print(sensorReadings.shuntvoltage); Serial.println(" mV");
+  Serial.print("Load Voltage:  "); Serial.print(sensorReadings.loadvoltage); Serial.println(" V");
+  Serial.print("Current:       "); Serial.print(sensorReadings.current_mA); Serial.println(" mA");
   Serial.println("");
   
   // Turn off the system when this drops below threshold.
@@ -180,12 +173,22 @@ void setup() {
 }
 
 void loop() {
+  // Create local readings data.
+  BarfDataType readings;
+
   barfnoises.timestamp = NTP_or_something();
   digitalWrite(12, HIGH);
   delay(100);
   digitalWrite(12, LOW);
-  float barfer = readINA219();
+  readINA219(readings);
   readIMU();
+  
+  // Write the data values, they should match the print statements from the loop.
+  Serial.print("^Bus Voltage:   "); Serial.print(readings.busvoltage); Serial.println(" V");
+  Serial.print("^Shunt Voltage: "); Serial.print(readings.shuntvoltage); Serial.println(" mV");
+  Serial.print("^Load Voltage:  "); Serial.print(readings.loadvoltage); Serial.println(" V");
+  Serial.print("^Current:       "); Serial.print(readings.current_mA); Serial.println(" mA");
+  Serial.println("");
   
   // To write a value just call the feed's send function and pass it the value.
   // Send will create the feed on Adafruit IO if it doesn't already exist and
